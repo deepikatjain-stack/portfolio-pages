@@ -1,0 +1,611 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600&family=Source+Serif+4&display=swap" rel="stylesheet"><style>
+#site-nav{background:#fff;border-bottom:1px solid #d9d9d9;box-shadow:0 1px 4px rgba(0,0,0,.08);position:relative;z-index:30}
+#site-nav .in{max-width:1120px;margin:0 auto;padding:14px 28px;display:flex;flex-wrap:wrap;gap:8px 28px;align-items:center;justify-content:space-between}
+#site-nav .name{font-family:"Source Serif 4",Georgia,serif;font-size:1.15rem;color:#111;text-decoration:none;line-height:1.2}
+#site-nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 22px}
+#site-nav ul a{font-family:Barlow,system-ui,sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#111;text-decoration:none}
+#site-nav a:hover{text-decoration:underline;text-underline-offset:.3em}
+#site-nav a:focus-visible{outline:3px solid #F2C230;outline-offset:3px}
+@media (max-width:520px){#site-nav .in{padding:12px 16px}#site-nav ul{gap:6px 16px}}
+#site-nav{margin:-16px -16px 16px}</style><meta name="description" content="Interactive prototype of ClearVoice, an AI writing assistant concept by Deepika Jain."></head><body>
+<nav id="site-nav" aria-label="Site">
+<div class="in">
+<a class="name" href="https://www.designbydeepikajain.com/" target="_self">Deepika Jain</a>
+<ul>
+<li><a href="https://www.designbydeepikajain.com/" target="_self">Work</a></li>
+<li><a href="https://www.designbydeepikajain.com/other-projects" target="_self">Other projects</a></li>
+<li><a href="https://www.designbydeepikajain.com/_files/ugd/15e19e_70239ca6830e4e77bc731b9f74b2dbec.pdf" target="_blank" rel="noopener">Resume</a></li>
+<li><a href="mailto:deepikatjain@gmail.com">Contact</a></li>
+</ul>
+</div>
+</nav>
+<title>ClearVoice Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: prototype rail, then a browser-window mock of the ClearVoice web app (editor left, suggestion sidebar right), matching the original ClearVoice editor design */
+:root{
+  --page:#F4F2EE; --surface:#FFFFFF; --surface-2:#F7F6F3; --collapsed:#EFEDE8; --line:#E2DFD8; --ink:#1D1B26; --muted:#6E6B76;
+  --accent:#5B4FC8; --accent-ink:#FFFFFF; --ctx:#EEF0FC; --chip:#E1E1F7; --chip-ink:#4A43A6;
+  --good:#2C7550; --good-ink:#FFFFFF;
+  --hi-bg:#DDF4E8; --hi-bd:#A4DBBF; --hi-ink:#1F6A46;
+  --md-bg:#FCF0D4; --md-bd:#EED28A; --md-ink:#77570A;
+  --lo-bg:#ECEAE6; --lo-bd:#CFCBC4; --lo-ink:#65615B;
+  --tone-bg:#FBE5D6; --tone-ink:#B14F27; --gram-bg:#E4E4F8; --gram-ink:#4A43A6;
+  --u-gram:#3A36A6; --u-tone:#B8471E; --u-low:#C0392B;
+  --h-gram:#EEF0FC; --h-tone:#FCEFE6; --h-low:#FCECEC;
+  --del:#C0453B; --ins:#2C7550; --acc-bg:#E3F3EA;
+  --dot-r:#FF5F57; --dot-y:#FEBC2E; --dot-g:#28C840;
+  --sans:"Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --logo:"Libre Baskerville", Georgia, "Times New Roman", serif;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --page:#141319; --surface:#1D1C24; --surface-2:#23222B; --collapsed:#2A2932; --line:#35333F; --ink:#ECEAF3; --muted:#A4A1AE;
+  --accent:#9D94F4; --accent-ink:#15141B; --ctx:#23223A; --chip:#302E52; --chip-ink:#C4BFFA;
+  --good:#5DBE8A; --good-ink:#10261A;
+  --hi-bg:#17362A; --hi-bd:#2F6B4F; --hi-ink:#7FD6A7;
+  --md-bg:#3A2F15; --md-bd:#6E5820; --md-ink:#EAC46A;
+  --lo-bg:#2E2D34; --lo-bd:#4A4852; --lo-ink:#B7B4BE;
+  --tone-bg:#3D2619; --tone-ink:#F29A6C; --gram-bg:#2D2B4E; --gram-ink:#C4BFFA;
+  --u-gram:#9D94F4; --u-tone:#F08C5A; --u-low:#F07A6E;
+  --h-gram:#25243D; --h-tone:#35251C; --h-low:#3A2224;
+  --del:#F08A83; --ins:#6FCB98; --acc-bg:#1B3528; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --page:#141319; --surface:#1D1C24; --surface-2:#23222B; --collapsed:#2A2932; --line:#35333F; --ink:#ECEAF3; --muted:#A4A1AE;
+  --accent:#9D94F4; --accent-ink:#15141B; --ctx:#23223A; --chip:#302E52; --chip-ink:#C4BFFA;
+  --good:#5DBE8A; --good-ink:#10261A;
+  --hi-bg:#17362A; --hi-bd:#2F6B4F; --hi-ink:#7FD6A7;
+  --md-bg:#3A2F15; --md-bd:#6E5820; --md-ink:#EAC46A;
+  --lo-bg:#2E2D34; --lo-bd:#4A4852; --lo-ink:#B7B4BE;
+  --tone-bg:#3D2619; --tone-ink:#F29A6C; --gram-bg:#2D2B4E; --gram-ink:#C4BFFA;
+  --u-gram:#9D94F4; --u-tone:#F08C5A; --u-low:#F07A6E;
+  --h-gram:#25243D; --h-tone:#35251C; --h-low:#3A2224;
+  --del:#F08A83; --ins:#6FCB98; --acc-bg:#1B3528; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;padding-inline:16px;padding-block:16px 40px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1240px;margin-inline:auto;display:grid;gap:14px}
+
+.rail{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
+.rail h1{font-family:var(--logo);font-style:italic;font-weight:400;font-size:24px;margin:0;line-height:1}
+.rail h1 small{font-family:var(--sans);font-style:normal;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-left:10px}
+.steps{display:flex;flex-wrap:wrap;gap:4px}
+.steps button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--muted)}
+.steps button[aria-current="step"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.steps button span{font-size:11px;margin-right:5px;opacity:.7;font-variant-numeric:tabular-nums}
+
+.win{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -40px rgba(30,28,41,.35)}
+.chrome{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.dots{display:flex;gap:7px}.dots i{width:12px;height:12px;border-radius:50%}
+.dots i:nth-child(1){background:var(--dot-r)}.dots i:nth-child(2){background:var(--dot-y)}.dots i:nth-child(3){background:var(--dot-g)}
+.url{flex:1;font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-family:var(--logo);font-style:italic;font-size:19px;line-height:1;margin-right:8px}
+.crumb{color:var(--muted);font-size:14px}
+.sp{flex:1}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 14px;font-size:13.5px;font-weight:600;min-height:38px;display:inline-flex;align-items:center;gap:6px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.good{background:var(--good);color:var(--good-ink);border-color:var(--good)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.more{border-color:var(--accent);color:var(--accent);background:var(--surface)}
+.btn:disabled{opacity:.5;cursor:progress}
+.screen{min-height:620px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.h2{font-size:30px;font-weight:700;letter-spacing:-.01em;line-height:1.15;margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:6px 0 0;max-width:58ch}
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 11px;font-size:13px;font-weight:500;background:var(--chip);color:var(--chip-ink);white-space:nowrap}
+.chip.plain{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+
+/* confidence + type pills */
+.conf{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 10px 2px 8px;font-size:12.5px;font-weight:500;white-space:nowrap;border:1px solid}
+.conf svg{width:10px;height:10px}
+.conf.high{background:var(--hi-bg);border-color:var(--hi-bd);color:var(--hi-ink)}
+.conf.med{background:var(--md-bg);border-color:var(--md-bd);color:var(--md-ink)}
+.conf.low{background:var(--lo-bg);border-color:var(--lo-bd);color:var(--lo-ink)}
+.type{font-size:12.5px;font-weight:500;border-radius:999px;padding:3px 11px}
+.type.grammar{background:var(--gram-bg);color:var(--gram-ink)}
+.type.tone{background:var(--tone-bg);color:var(--tone-ink)}
+
+/* home */
+.home{display:grid;grid-template-columns:minmax(0,1fr) 300px}
+.home main{padding:36px 40px;display:grid;gap:28px;align-content:start;min-width:0}
+.hello{font-size:34px;font-weight:700;letter-spacing:-.015em;line-height:1.15;margin:0;text-wrap:balance}
+.hello span{color:var(--accent)}
+.scen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.scen button{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:16px;display:grid;gap:8px;align-content:start;min-height:150px;transition:border-color .15s, transform .15s}
+.scen button:hover{border-color:var(--accent);transform:translateY(-2px)}
+.scen b{font-weight:700;font-size:15.5px}
+.scen p{margin:0;color:var(--muted);font-size:13.5px}
+.drafts{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.drafts div{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:14px;align-items:center;padding:12px 16px;border-top:1px solid var(--line);font-size:14px}
+.drafts div:first-child{border-top:0}
+.drafts small{color:var(--muted);font-size:12.5px}
+.home aside{border-left:1px solid var(--line);background:var(--surface-2);padding:30px 24px;display:grid;gap:24px;align-content:start}
+.stat b{font-size:42px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.stat p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.spark{width:100%;height:60px}
+.legend{display:grid;gap:12px;font-size:13px}
+.legend div{display:grid;gap:5px;justify-items:start}
+.why{font-size:13.5px;color:var(--muted)}
+.why b{color:var(--ink)}
+
+/* context */
+.ctx{display:grid;grid-template-columns:minmax(0,1fr) 340px}
+.ctx form{padding:36px 40px;display:grid;gap:26px;align-content:start;max-width:720px;min-width:0}
+.field{display:grid;gap:10px;border:0;padding:0;margin:0}
+.field legend,.field label.lbl{font-weight:600;font-size:14.5px;padding:0;margin-bottom:10px}
+.field .hint{color:var(--muted);font-size:13px;margin:-4px 0 0}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.seg span{display:block;border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-size:14px;min-height:44px;background:var(--surface)}
+.seg span small{display:block;color:var(--muted);font-size:12px}
+.seg input:checked + span{border-color:var(--accent);background:var(--ctx);box-shadow:inset 0 0 0 1px var(--accent);color:var(--chip-ink);font-weight:600}
+.seg input:focus-visible + span{outline:3px solid var(--accent);outline-offset:3px}
+.text-in{border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:inherit;background:var(--surface);color:var(--ink);min-height:44px;width:100%}
+.scale{display:flex;gap:6px}.scale label{flex:1}.scale span{text-align:center}
+.ctx aside{background:var(--surface-2);border-left:1px solid var(--line);padding:30px 26px;display:grid;gap:16px;align-content:start}
+.rules{display:grid;gap:8px;margin:0;padding:0;list-style:none;font-size:13.5px}
+.rules li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.rules li.on{border-color:var(--accent);background:var(--ctx)}
+
+/* editor */
+.ctxbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 20px;background:var(--ctx);border-bottom:1px solid var(--line);font-size:14px;color:var(--chip-ink)}
+.ctxbar .link{margin-left:auto;background:none;border:0;color:var(--chip-ink);font-weight:500;padding:4px;font-size:14px}
+.ed{display:grid;grid-template-columns:minmax(0,1fr) 380px;min-height:600px}
+.doc{padding:22px 28px 16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.doc .subj{border-bottom:1px solid var(--line);padding-bottom:18px}
+.doc .subj small{font-size:13px;font-weight:500;letter-spacing:.06em;color:var(--muted)}
+.doc .subj div{font-weight:600;font-size:17px;margin-top:6px}
+.body{font-size:16px;line-height:1.95;max-width:68ch;padding-top:6px}
+.body p{margin:0 0 20px}
+.mk{border-radius:2px;cursor:pointer;padding:1px 0;transition:background .2s, box-shadow .2s}
+.mk.grammar{background:var(--h-gram);text-decoration:underline 2px var(--u-gram);text-underline-offset:5px}
+.mk.tone{background:var(--h-tone);text-decoration:underline 2px var(--u-tone);text-underline-offset:5px}
+.mk.lowc{background:var(--h-low);text-decoration:underline 2px dashed var(--u-low);text-underline-offset:5px}
+.mk.focus{box-shadow:0 0 0 2px var(--accent)}
+.mk.acc{background:var(--acc-bg);color:var(--ins);text-decoration:none;cursor:default}
+.mk.dec{background:none;text-decoration:none;cursor:default}
+.keys{display:flex;gap:18px;flex-wrap:wrap;margin-top:auto;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.keys i{display:inline-block;width:18px;height:0;border-top:2px solid var(--u-gram);vertical-align:middle;margin-right:6px}
+.keys i.t{border-color:var(--u-tone)}.keys i.l{border-top-style:dashed;border-color:var(--u-low)}
+.side{border-left:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;min-width:0}
+.side header{display:flex;align-items:center;gap:8px;padding:18px 22px;border-bottom:1px solid var(--line)}
+.side header b{font-size:15.5px;font-weight:600}
+.count{background:var(--accent);color:var(--accent-ink);border-radius:999px;font-size:12.5px;font-weight:600;min-width:26px;height:26px;display:grid;place-items:center;padding:0 7px;margin-left:auto}
+.progress{height:3px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--good);transition:width .3s}
+.cards{padding:14px;display:grid;gap:12px;align-content:start;overflow:auto;flex:1}
+.card{background:var(--collapsed);border:1px solid var(--line);border-radius:8px;transition:border-color .15s, background .15s}
+.card.open{background:var(--surface);border-color:var(--accent)}
+.card.resolved{background:var(--surface);opacity:.8}
+.card .hd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:13px 14px 6px;background:none;border:0;width:100%;text-align:left}
+.card .hd .chev{margin-left:auto;color:var(--muted);font-size:13px}
+.change{padding:0 14px 13px;font-size:14px;line-height:1.5}
+.change del{color:var(--del);text-decoration-thickness:1px}
+.change ins{color:var(--ins);text-decoration:none}
+.bd{padding:0 14px 14px;display:grid;gap:12px}
+.explain{background:var(--surface-2);border-radius:8px;padding:12px 14px;font-size:14px;color:var(--muted);line-height:1.55}
+.explain p{margin:0}
+.deeper{border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13.5px;display:grid;gap:8px}
+.deeper b{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.deeper p{margin:0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.actions .btn{min-height:34px;padding:5px 12px;font-size:13.5px;font-weight:500}
+.status{font-size:13px;font-weight:600;padding:0 14px 12px;display:flex;align-items:center;gap:6px}
+.status.a{color:var(--ins)}.status.d{color:var(--muted)}
+.status button{margin-left:auto;background:none;border:0;color:var(--accent);font-size:13px;padding:2px}
+.reasons{display:flex;flex-wrap:wrap;gap:6px}
+.reasons button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:5px 11px;font-size:12.5px;min-height:32px}
+.reasons button:hover{border-color:var(--accent)}
+.side footer{padding:12px 14px;border-top:1px solid var(--line);display:grid;gap:8px}
+.skipped{font-size:13px;color:var(--muted);background:var(--surface);border:1px dashed var(--lo-bd);border-radius:8px;padding:10px 12px}
+.empty{padding:28px 20px;text-align:center;color:var(--muted);display:grid;gap:6px;justify-items:center;border:1px solid var(--line);border-radius:8px}
+.empty b{font-size:18px;color:var(--ink)}
+.scan{padding:22px 16px;display:grid;gap:12px}
+.sk{height:84px;border-radius:8px;background:linear-gradient(90deg,var(--collapsed) 0%,var(--line) 50%,var(--collapsed) 100%);background-size:200% 100%;animation:sh 1.2s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+
+/* preview modal */
+.overlay{position:fixed;inset:0;background:rgba(20,18,30,.5);display:grid;place-items:center;padding:16px;z-index:10}
+.pv{background:var(--surface);border-radius:14px;max-width:880px;width:100%;max-height:92vh;overflow:auto;border:1px solid var(--line)}
+.pv header{padding:22px 26px 14px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.pv .x{margin-left:auto;border:0;background:none;font-size:22px;color:var(--muted);width:44px;height:44px}
+.pvgrid{display:grid;grid-template-columns:minmax(0,1fr) 250px}
+.pvtext{padding:22px 26px;font-size:15.5px;line-height:1.85;min-width:0}
+.pvtext p{margin:0 0 12px}
+.pvtext del{color:var(--del)}
+.pvtext ins{color:var(--ins);text-decoration:none;background:var(--acc-bg);font-weight:500}
+.pvside{border-left:1px solid var(--line);background:var(--surface-2);padding:22px 20px;display:grid;gap:18px;align-content:start}
+.meter{display:grid;gap:6px}
+.meter .bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.meter .bar i{display:block;height:100%;background:var(--accent)}
+.meter b{font-size:36px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.tog{display:flex;gap:4px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:3px;width:max-content}
+.tog button{border:0;background:none;border-radius:6px;padding:5px 10px;font-size:12.5px}
+.tog button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.08);font-weight:600}
+.pv footer{padding:14px 26px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.recap{display:grid;gap:6px;font-size:14px}
+.recap div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:6px 0}
+.recap span{font-variant-numeric:tabular-nums;font-weight:600}
+
+/* done */
+.done{padding:50px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+.sent{display:grid;gap:14px}
+.tick{width:52px;height:52px;border-radius:50%;background:var(--hi-bg);color:var(--hi-ink);display:grid;place-items:center}
+.ask{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:24px;display:grid;gap:16px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.compare div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}
+.compare b{font-size:34px;font-weight:700;display:block;line-height:1.1}
+.compare small{color:var(--muted);font-size:12.5px}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:10px;font-size:13.5px;z-index:20}
+.note{font-size:12.5px;color:var(--muted);text-align:center}
+
+@media (max-width:900px){
+  .home,.ctx,.ed,.pvgrid,.done{grid-template-columns:minmax(0,1fr)}
+  .home aside,.ctx aside,.side,.pvside{border-left:0;border-top:1px solid var(--line)}
+  .scen{grid-template-columns:minmax(0,1fr)}
+  .home main,.ctx form,.doc,.done{padding:22px 18px}
+  .hello{font-size:26px}
+  .topbar{padding:10px 14px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="rail">
+    <h1>ClearVoice<small>Clickable prototype</small></h1>
+    <nav class="steps" id="steps" aria-label="Prototype screens"></nav>
+  </div>
+  <div class="win">
+    <div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url" id="url">clearvoice.app/home</div></div>
+    <div class="topbar">
+      <span class="logo">ClearVoice</span><span class="crumb" id="crumb">Home</span>
+      <span class="sp"></span>
+      <span id="topActions" style="display:flex;gap:8px;flex-wrap:wrap"></span>
+    </div>
+    <div class="screen" id="screen"></div>
+  </div>
+  <p class="note">Tip: click the highlighted phrases in the draft, or use Tab / Enter / Esc. Start any of the three scenarios from Home.</p>
+</div>
+<div id="layer"></div>
+
+<script>
+const ICON = {
+  high:'<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="currentColor"/></svg>',
+  med:'<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 1.5a4.5 4.5 0 0 0 0 9z" fill="currentColor"/></svg>',
+  low:'<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>'
+};
+const CONF_LABEL = {high:'High confidence', med:'Medium confidence', low:'Low confidence'};
+const conf = c => `<span class="conf ${c}">${ICON[c]}${CONF_LABEL[c]}</span>`;
+const typeTag = g => `<span class="type ${g.kind==='grammar'?'grammar':'tone'}">${g.type}</span>`;
+
+const SCENARIOS = {
+  manager:{
+    title:'Ask for a deadline extension', blurb:'Email to your manager about the Q3 report timeline.',
+    to:'Sarah K.', role:'Manager', know:'Professional', knowOpt:'Professionally', goal:'Request extension', channel:'Email', tone:'Balanced',
+    subject:'Timeline extension request — Q3 analytics report',
+    body:[
+      ['Hi Sarah,'],
+      [{s:'s1'},' a brief extension for the Q3 analytics report. Due to unexpected data quality issues that arose last week, the current timeline ',{s:'s2'},' for the thorough analysis that this report requires.'],
+      ['I believe that an additional three days would allow us to produce work that better reflects the effort our team has put in.'],
+      [{s:'s3'}],
+      ['Best,<br>Priya']
+    ],
+    sugg:{
+      s1:{type:'Grammar',kind:'grammar',c:'high',from:'I am writing to request',to:"I'm writing to request",
+        why:'Using a contraction here ("I\'m" instead of "I am") is more natural for professional emails and removes unnecessary formality. Your manager will still read this as respectful and clear.',
+        rule:'Contractions are standard in US workplace email, even to managers. Formal documents and legal writing are the main exceptions.',
+        keep:'Only "I am" changes. The rest of the sentence is yours.'},
+      s2:{type:'Tone',kind:'tone',c:'med',from:'would not allow sufficient time',to:'does not leave enough time',
+        why:'Plainer wording sounds more confident. "Would not allow sufficient time" can read as stiff or overly cautious.',
+        rule:'Medium confidence: some managers prefer the more formal version. Either one is correct.',
+        keep:'Your reason for the extension stays exactly the same.'},
+      s3:{type:'Tone',kind:'lowc',c:'low',from:'I hope this is possible.',to:'Please let me know if this works.',
+        why:'"I hope this is possible" can sound unsure to some readers, but many managers find it polite and warm.',
+        rule:'Low confidence: this depends on how you and Sarah usually talk. There is no rule here.',
+        keep:'If this is how you normally write to her, keeping it is a good choice.'}
+    },
+    skipped:null
+  },
+  teammate:{
+    title:'Quick update to a teammate', blurb:'Slack message to Arjun, whom you work with every day.',
+    to:'Arjun M.', role:'Teammate', know:'Close', knowOpt:'Well', goal:'Share an update', channel:'Slack', tone:'Casual',
+    subject:'#analytics-dash · Slack',
+    body:[
+      ['hey Arjun! pushed the fix for the dashboard filters'],
+      ['can you take a look ',{s:'t1'},'? no rush, tomorrow is fine too']
+    ],
+    sugg:{
+      t1:{type:'Grammar',kind:'lowc',c:'low',from:'when free',to:"when you're free",
+        why:'"When free" drops the subject. In casual Slack between teammates this is common and reads naturally.',
+        rule:'Low confidence: short forms are normal in chat with people you know well.',
+        keep:'Change it only if you want it to sound fuller.'}
+    },
+    skipped:'You know Arjun well, so ClearVoice held back 3 formality suggestions (capitalization, "hey", exclamation mark). Turn them on in context settings.'
+  },
+  vp:{
+    title:'Introduce yourself to a VP', blurb:'First email to a senior leader you have never met.',
+    to:'Daniel R.', role:'VP, Product', know:'Just met', knowOpt:'Just met', goal:'Ask for a meeting', channel:'Email', tone:'More formal',
+    subject:'Request for 20 minutes to discuss the churn model',
+    body:[
+      ['Dear Daniel,'],
+      [{s:'v1'},'. I have been leading the new customer churn model and ',{s:'v2'},' 20 minutes to walk you through the early results.'],
+      ['I think it can help the Product team plan the Q4 retention roadmap.'],
+      [{s:'v3'}],
+      ['Regards,<br>Priya Sharma']
+    ],
+    sugg:{
+      v1:{type:'Grammar',kind:'grammar',c:'high',from:'I am Priya from analytics team',to:"I'm Priya from the Analytics team",
+        why:'English needs "the" before a specific team name. Capitalizing "Analytics" matches how team names are written.',
+        rule:'Articles before named groups ("the Analytics team") are a fixed rule in English.',
+        keep:'Only the article and the capital letter change.'},
+      v2:{type:'Tone',kind:'tone',c:'med',from:'I want to ask if you can give me',to:'I would appreciate',
+        why:'With someone you just met, "I want to ask if you can give me" can sound direct. "I would appreciate" is a common, polite frame for a senior reader.',
+        rule:'Medium confidence: directness is valued at many US companies too.',
+        keep:'Your request and the 20 minutes stay the same.'},
+      v3:{type:'Regional usage',kind:'tone',c:'high',from:'Kindly revert back at your earliest.',to:'Please let me know a time that works for you.',
+        why:'"Revert back" is standard in Indian and some British business English, but US readers often don\'t recognize it as "reply".',
+        rule:'This is not an error in your English. It is a regional difference, flagged because Daniel is US-based.',
+        keep:'Keep it if Daniel is used to this phrasing.'}
+    },
+    skipped:null
+  }
+};
+
+const SCREENS = [
+  {id:'home',label:'Home'},{id:'context',label:'Context'},{id:'draft',label:'Draft'},{id:'analyzing',label:'Analyzing'},
+  {id:'editor',label:'Suggestions'},{id:'preview',label:'Preview draft'},{id:'done',label:'Sent'}
+];
+
+let state = {screen:'home', scen:'manager', status:{}, open:null, more:{}, declining:null, reason:{}, pre:3, post:null, diff:'changes', toast:null};
+const S = () => SCENARIOS[state.scen];
+const $ = s => document.querySelector(s);
+
+function resetScenario(key){
+  state.scen = key; state.status = {}; state.more = {}; state.reason = {}; state.declining = null; state.post = null;
+  const ids = Object.keys(S().sugg); state.open = ids[0];
+  ids.forEach(id => state.status[id] = 'pending');
+}
+resetScenario('manager');
+
+function go(screen){
+  state.screen = screen; render();
+  if(screen === 'analyzing') setTimeout(()=>{ if(state.screen==='analyzing'){ state.screen='editor'; render(); } }, 1600);
+}
+function steps(){
+  $('#steps').innerHTML = SCREENS.map((s,i)=>`<button data-go="${s.id}" ${state.screen===s.id?'aria-current="step"':''}><span>${String(i+1).padStart(2,'0')}</span>${s.label}</button>`).join('');
+}
+
+/* ---------- HOME ---------- */
+function home(){
+  const sc = Object.entries(SCENARIOS).map(([k,v])=>`
+    <button data-start="${k}"><span class="chip plain">${v.channel} · ${v.know}</span><b>${v.title}</b><p>${v.blurb}</p><span class="chip">${v.role} — ${v.to}</span></button>`).join('');
+  return `<div class="home">
+    <main>
+      <div><h2 class="hello">Good morning, Priya. <span>What are you writing today?</span></h2>
+      <p class="lead">Tell ClearVoice who you're writing to. Every suggestion explains why, and shows how sure it is.</p></div>
+      <section><p class="eyebrow">Start a new message</p><div class="scen">${sc}</div></section>
+      <section><p class="eyebrow">Recent drafts</p><div class="drafts">
+        <div><span>Sprint demo notes for stakeholders<br><small>To product leads · 4 suggestions, 3 accepted</small></span><span class="chip plain">Sent</span><small>Mon</small></div>
+        <div><span>Follow-up after vendor call<br><small>To Acme Data · 2 suggestions, 1 accepted</small></span><span class="chip plain">Sent</span><small>Fri</small></div>
+        <div><span>Out-of-office handover<br><small>To team · draft</small></span><span class="chip">Draft</span><small>Thu</small></div>
+      </div></section>
+    </main>
+    <aside>
+      <div class="stat"><p class="eyebrow">Your writing confidence</p><b>4.2<small style="font-size:18px;color:var(--muted);font-weight:500"> / 5</small></b><p>Up from 2.8 when you started, 6 weeks ago</p>
+        <svg class="spark" viewBox="0 0 240 60" preserveAspectRatio="none" aria-label="Confidence trend rising from 2.8 to 4.2">
+          <path d="M0 50 L40 46 L80 40 L120 34 L160 24 L200 18 L240 12 L240 60 L0 60Z" fill="var(--ctx)"/>
+          <path d="M0 50 L40 46 L80 40 L120 34 L160 24 L200 18 L240 12" fill="none" stroke="var(--accent)" stroke-width="2"/>
+          <circle cx="237" cy="12" r="3.5" fill="var(--accent)"/></svg></div>
+      <div><p class="eyebrow">How to read confidence</p><div class="legend">
+        <div>${conf('high')}<span>Clear rule. Usually safe to accept.</span></div>
+        <div>${conf('med')}<span>Depends on style. Read the reason.</span></div>
+        <div>${conf('low')}<span>A judgment call. Your version may be better.</span></div></div></div>
+      <div class="why">You declined <b>31%</b> of suggestions this month. Declining is part of writing in your own voice.</div>
+    </aside></div>`;
+}
+
+/* ---------- CONTEXT ---------- */
+function context(){
+  const s = S();
+  const radio = (name, opts, val) => `<div class="seg">${opts.map(o=>{const [t,sub]=Array.isArray(o)?o:[o];return `<label><input type="radio" name="${name}" id="${name}-${t.replace(/\W/g,'')}" value="${t}" ${t===val?'checked':''}><span>${t}${sub?`<small>${sub}</small>`:''}</span></label>`}).join('')}</div>`;
+  return `<div class="ctx">
+    <form id="ctxForm">
+      <div><p class="eyebrow">Step 1 of 2 · Before you write</p><h2 class="h2">Who is this message for?</h2></div>
+      <div class="field"><label class="lbl" for="to">Writing to</label><input class="text-in" id="to" value="${s.role} — ${s.to}"></div>
+      <fieldset class="field"><legend>How well do you know them?</legend>
+        ${radio('know',[['Well','We talk often'],['Professionally','We work together'],['Just met','First few messages']],s.knowOpt)}</fieldset>
+      <fieldset class="field"><legend>What do you want this message to do?</legend>
+        ${radio('goal',['Request extension','Share an update','Ask for a meeting','Say no politely','Thank someone'],s.goal)}</fieldset>
+      <fieldset class="field"><legend>Tone you're aiming for</legend>
+        ${radio('tone',['Casual','Balanced','More formal'],s.tone)}</fieldset>
+      <fieldset class="field"><legend>How confident do you feel about this message right now?</legend>
+        <div class="seg scale">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="pre" id="pre-${n}" value="${n}" ${n===state.pre?'checked':''}><span>${n}</span></label>`).join('')}</div>
+        <p class="hint">1 = very unsure · 5 = ready to send. We'll ask again at the end.</p></fieldset>
+    </form>
+    <aside>
+      <p class="eyebrow">What this changes</p>
+      <p class="why">ClearVoice uses this to decide <b>which suggestions to show</b> and <b>how sure it can be</b>. Nothing here is shared with ${s.to.split(' ')[0]}.</p>
+      <ul class="rules">
+        <li class="${s.knowOpt==='Well'?'on':''}"><b>Well</b> · fewer formality edits, casual phrasing left alone</li>
+        <li class="${s.knowOpt==='Professionally'?'on':''}"><b>Professionally</b> · clarity and tone balanced</li>
+        <li class="${s.knowOpt==='Just met'?'on':''}"><b>Just met</b> · politeness and regional usage flagged more often</li>
+      </ul>
+      <p class="why">You can change this any time with "Edit context" above the editor.</p>
+    </aside></div>`;
+}
+
+/* ---------- EDITOR ---------- */
+function ctxbar(){
+  const s=S();
+  return `<div class="ctxbar">Writing to: <span class="chip">${s.role} — ${s.to}</span> · Relationship: <span class="chip">${s.know}</span> · Goal: <span class="chip">${s.goal}</span><button class="link" data-go="context">Edit context →</button></div>`;
+}
+function plainBody(){ const s=S(); return s.body.map(p=>'<p>'+p.map(x=>typeof x==='string'?x:s.sugg[x.s].from).join('')+'</p>').join(''); }
+function docHTML(){
+  const s=S();
+  return s.body.map(par=>'<p>'+par.map(seg=>{
+    if(typeof seg==='string') return seg;
+    const g=s.sugg[seg.s], st=state.status[seg.s];
+    if(st==='accepted') return `<span class="mk acc" title="Accepted">${g.to}</span>`;
+    if(st==='declined') return `<span class="mk dec">${g.from}</span>`;
+    return `<span class="mk ${g.kind} ${state.open===seg.s?'focus':''}" role="button" tabindex="0" data-open="${seg.s}" aria-label="${g.type} suggestion, ${CONF_LABEL[g.c]}: ${g.from}">${g.from}</span>`;
+  }).join('')+'</p>').join('');
+}
+function card(id){
+  const g=S().sugg[id], st=state.status[id], open=state.open===id && st==='pending';
+  const chev = st==='pending' ? `<span class="chev" aria-hidden="true">${open?'▲':'▼'}</span>` : '';
+  const head = `<button class="hd" data-open="${id}" aria-expanded="${open}">${typeTag(g)}${conf(g.c)}${chev}</button>`;
+  const change = open ? `<div class="change"><del>${g.from}</del> <ins>${g.to}</ins></div>` : `<div class="change"><del>${g.from}</del> → <ins>${g.to}</ins></div>`;
+  if(st!=='pending'){
+    return `<div class="card resolved">${head}<div class="status ${st==='accepted'?'a':'d'}">${st==='accepted'?'✓ Accepted':'Declined · kept your version'}${state.reason[id]?` · ${state.reason[id]}`:''}<button data-undo="${id}">Undo</button></div></div>`;
+  }
+  let body='';
+  if(open){
+    body = `<div class="bd"><div class="explain"><p>${g.why}</p></div>`;
+    if(state.more[id]) body += `<div class="deeper"><b>How sure we are</b><p>${g.rule}</p><b>What stays yours</b><p>${g.keep}</p></div>`;
+    if(state.declining===id){
+      body += `<div><p class="eyebrow" style="margin-bottom:6px">Why keep yours? (optional)</p><div class="reasons">
+        ${['This is how I talk to them','My version is clearer','Meaning would change','Skip'].map(r=>`<button data-reason="${id}" data-r="${r}">${r}</button>`).join('')}</div></div>`;
+    } else {
+      body += `<div class="actions">
+        <button class="btn good" data-accept="${id}" aria-label="Accept suggestion: change '${g.from}' to '${g.to}'">✓ Accept</button>
+        <button class="btn" data-decline="${id}" aria-label="Decline suggestion and keep: '${g.from}'">Decline</button>
+        <button class="btn more" data-more="${id}" aria-expanded="${!!state.more[id]}">${state.more[id]?'Show less':'Tell me more'}</button></div>`;
+    }
+    body += `</div>`;
+  }
+  return `<div class="card ${open?'open':''}">${head}${change}${body}</div>`;
+}
+function editorFrame(sideInner, docInner){
+  const s=S();
+  return `${ctxbar()}<div class="ed">
+    <div class="doc"><div class="subj"><small>${s.channel==='Email'?'SUBJECT':'CHANNEL'}</small><div>${s.subject}</div></div>
+      <div class="body">${docInner}</div>
+      <div class="keys"><span><i></i>Grammar</span><span><i class="t"></i>Tone</span><span><i class="l"></i>Low confidence</span></div></div>
+    <div class="side" aria-label="Suggestions">${sideInner}</div></div>`;
+}
+function draft(){
+  return editorFrame(`<header><b>Suggestions</b></header><div class="empty" style="margin:16px;border-style:dashed"><b>Ready when you are</b><span>Click Analyze to check your draft for ${S().to.split(' ')[0]}.</span></div>`, plainBody());
+}
+function analyzing(){
+  const s=S();
+  return editorFrame(`<header><b>Checking your draft…</b></header><div class="scan"><p class="why" style="margin:0">Reading it the way <b>${s.to.split(' ')[0]}</b> (${s.role}, ${s.know.toLowerCase()}) might.</p><div class="sk"></div><div class="sk"></div><div class="sk" style="opacity:.6"></div></div>`, plainBody());
+}
+function editor(){
+  const s=S(), ids=Object.keys(s.sugg);
+  const pending = ids.filter(i=>state.status[i]==='pending').length;
+  const done = ids.length-pending;
+  const side = `<header><b>Suggestions</b><span class="count" aria-label="${pending} open">${pending}</span></header>
+      <div class="progress" title="${done} of ${ids.length} reviewed"><i style="width:${done/ids.length*100}%"></i></div>
+      <div class="cards">
+        ${s.skipped?`<div class="skipped">${s.skipped}</div>`:''}
+        ${pending===0?`<div class="empty"><b>All reviewed</b><span>See the whole message before you send it.</span></div>`:''}
+        ${ids.filter(i=>state.status[i]==='pending').map(card).join('')}
+        ${ids.filter(i=>state.status[i]!=='pending').map(card).join('')}
+      </div>
+      <footer>
+        ${pending>1?`<button class="btn" data-accepthigh>Accept all high confidence</button>`:''}
+        <button class="btn primary" data-go="preview">Preview final draft →</button>
+      </footer>`;
+  return editorFrame(side, docHTML());
+}
+
+/* ---------- PREVIEW ---------- */
+function preview(){
+  const s=S(), ids=Object.keys(s.sugg);
+  const acc=ids.filter(i=>state.status[i]==='accepted');
+  const dec=ids.filter(i=>state.status[i]==='declined');
+  const pen=ids.filter(i=>state.status[i]==='pending');
+  const words=t=>t.replace(/<[^>]+>/g,' ').split(/\s+/).filter(Boolean).length;
+  let total=0, changed=0;
+  s.body.forEach(p=>p.forEach(x=>{ if(typeof x==='string') total+=words(x); else { const n=words(s.sugg[x.s].from); total+=n; if(state.status[x.s]==='accepted') changed+=n; } }));
+  const yours=Math.round((1-changed/total)*100);
+  const text = s.body.map(p=>'<p>'+p.map(x=>{
+    if(typeof x==='string') return x;
+    const g=s.sugg[x.s];
+    if(state.status[x.s]==='accepted') return state.diff==='changes'?`<del>${g.from}</del> <ins>${g.to}</ins>`:g.to;
+    return g.from;
+  }).join('')+'</p>').join('');
+  return `<div class="overlay" data-close><div class="pv" role="dialog" aria-modal="true" aria-labelledby="pvTitle">
+    <header><div><p class="eyebrow">Step 2 of 2 · Before you send</p><h2 class="h2" id="pvTitle">Preview final draft</h2></div><button class="x" data-go="editor" aria-label="Close preview">×</button></header>
+    <div class="pvgrid">
+      <div class="pvtext"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px"><b style="font-size:14px">${s.subject}</b>
+        <div class="tog"><button data-diff="changes" aria-pressed="${state.diff==='changes'}">Show changes</button><button data-diff="clean" aria-pressed="${state.diff==='clean'}">Clean</button></div></div>${text}</div>
+      <div class="pvside">
+        <div class="meter"><p class="eyebrow" style="margin:0">Still in your words</p><b>${yours}%</b><div class="bar"><i style="width:${yours}%"></i></div><small class="crumb" style="font-size:12.5px">${changed} of ${total} words changed</small></div>
+        <div class="recap"><div>Accepted <span>${acc.length}</span></div><div>Declined <span>${dec.length}</span></div><div>Not reviewed <span>${pen.length}</span></div></div>
+        ${pen.length?`<p class="why" style="margin:0">${pen.length} suggestion${pen.length>1?'s are':' is'} still open. Unreviewed text stays as you wrote it.</p>`:''}
+      </div>
+    </div>
+    <footer><button class="btn ghost" data-go="editor">Back to editing</button><button class="btn" data-copy>Copy text</button><button class="btn primary" data-go="done">Looks good, send →</button></footer>
+  </div></div>`;
+}
+
+/* ---------- DONE ---------- */
+function done(){
+  const s=S(), ids=Object.keys(s.sugg);
+  const acc=ids.filter(i=>state.status[i]==='accepted').length, dec=ids.filter(i=>state.status[i]==='declined').length;
+  return `<div class="done">
+    <div class="sent"><div class="tick"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h2 class="h2">Sent to ${s.to.split(' ')[0]}.</h2>
+      <p class="lead">You reviewed ${ids.length} suggestion${ids.length>1?'s':''}: accepted ${acc} and declined ${dec}. Both count as good decisions.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" data-go="home">Back to home</button><button class="btn" data-restart>Try this scenario again</button></div></div>
+    <div class="ask"><p class="eyebrow" style="margin:0">Quick check-in</p><b style="font-size:17px">How confident do you feel about this message now?</b>
+      <div class="seg scale">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="post" id="post-${n}" value="${n}" ${n===state.post?'checked':''}><span>${n}</span></label>`).join('')}</div>
+      <div class="compare"><div><small>Before writing</small><b>${state.pre}</b></div><div><small>After ClearVoice</small><b style="color:var(--accent)">${state.post??'–'}</b></div></div>
+      ${state.post!=null?`<p class="why" style="margin:0">${state.post>state.pre?`Up ${state.post-state.pre} point${state.post-state.pre>1?'s':''}. We'll add this to your trend on Home.`:'Thanks. This helps ClearVoice learn when to hold back.'}</p>`:''}
+    </div></div>`;
+}
+
+/* ---------- RENDER ---------- */
+function render(){
+  steps();
+  const map={home:['home','Home'],context:['new/context','New message'],draft:['editor','Untitled draft'],analyzing:['editor','Untitled draft'],editor:['editor','Untitled draft'],preview:['editor/preview','Untitled draft'],done:['sent','Sent']};
+  $('#url').textContent='clearvoice.app/'+map[state.screen][0];
+  $('#crumb').textContent=map[state.screen][1];
+  const ta=$('#topActions');
+  const ed = ['draft','analyzing','editor','preview'].includes(state.screen);
+  ta.innerHTML = state.screen==='context' ? `<button class="btn primary" data-go="draft">Start writing →</button>`
+    : ed ? `<button class="btn">History</button><button class="btn">Save</button><button class="btn primary" data-go="analyzing" ${state.screen==='analyzing'?'disabled':''}>${state.screen==='analyzing'?'Analyzing…':'Analyze →'}</button>`
+    : state.screen==='home' ? `<button class="btn primary" data-start="manager">+ New message</button>` : '';
+  const scr = state.screen==='preview' ? 'editor' : state.screen;
+  $('#screen').innerHTML = ({home,context,draft,analyzing,editor,done})[scr]();
+  $('#layer').innerHTML = (state.screen==='preview'?preview():'') + (state.toast?`<div class="toast" role="status">${state.toast}</div>`:'');
+}
+function toast(t){ state.toast=t; render(); setTimeout(()=>{state.toast=null; render();},1800); }
+function nextOpen(){ const n=Object.keys(S().sugg).find(i=>state.status[i]==='pending'); state.open=n||null; }
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-open],[data-close]'); if(!t || t.disabled) return;
+  const d=t.dataset;
+  if(d.close!==undefined){ if(e.target===t) go('editor'); return; }
+  if(d.go){ if(d.go==='analyzing'){ Object.keys(S().sugg).forEach(i=>state.status[i]='pending'); state.open=Object.keys(S().sugg)[0]; } go(d.go); return; }
+  if(d.start){ resetScenario(d.start); go('context'); return; }
+  if(d.open){ if(state.status[d.open]==='pending'){ state.open = state.open===d.open && t.classList.contains('hd') ? null : d.open; state.declining=null; render(); } return; }
+  if(d.accept){ state.status[d.accept]='accepted'; nextOpen(); toast('Accepted. Change applied to your draft.'); return; }
+  if(d.decline){ state.declining=d.decline; render(); return; }
+  if(d.reason){ state.status[d.reason]='declined'; if(d.r!=='Skip') state.reason[d.reason]=d.r; state.declining=null; nextOpen(); toast('Declined. Your version stays.'); return; }
+  if(d.more){ state.more[d.more]=!state.more[d.more]; render(); return; }
+  if(d.undo){ state.status[d.undo]='pending'; delete state.reason[d.undo]; state.open=d.undo; render(); return; }
+  if(t.hasAttribute('data-accepthigh')){ Object.entries(S().sugg).forEach(([k,g])=>{ if(g.c==='high'&&state.status[k]==='pending') state.status[k]='accepted'; }); nextOpen(); toast('Accepted all high-confidence suggestions.'); return; }
+  if(d.diff){ state.diff=d.diff; render(); return; }
+  if(t.hasAttribute('data-copy')){ const txt=document.querySelector('.pvtext').innerText; try{ navigator.clipboard.writeText(txt).then(()=>toast('Copied to clipboard'),()=>toast('Copy not available here')); }catch(_){ toast('Copy not available here'); } return; }
+  if(t.hasAttribute('data-restart')){ resetScenario(state.scen); go('draft'); return; }
+});
+document.addEventListener('change',e=>{
+  const n=e.target.name;
+  if(n==='pre') state.pre=+e.target.value;
+  if(n==='post'){ state.post=+e.target.value; render(); }
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){ if(state.screen==='preview') go('editor'); else if(state.declining){ state.declining=null; render(); } }
+  if(e.key==='Enter' && e.target.matches('.mk[data-open]')){ e.target.click(); }
+});
+render();
+</script>
+
+</body></html>
